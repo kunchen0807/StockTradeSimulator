@@ -50,6 +50,9 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
   // [devtool] this is an additional source map
   // that will let the browser know what files are running our code.
   // Helps with error tracing. Without it we will not know where
