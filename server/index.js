@@ -2,11 +2,13 @@ const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const axios = require('axios');
+const signupAccount = require('../database/controllers/account');
+const loginAccount = require('../database/controllers/login');
 
 const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../client/public')));
 
 const options = {
   method: 'GET',
@@ -23,6 +25,18 @@ const options = {
     'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
   },
 };
+
+app.post('/login', (req, res) => {
+  loginAccount(req.body, (response) => {
+    res.status(201).send(response);
+  });
+});
+
+app.post('/signup', (req, res) => {
+  signupAccount(req.body, () => {
+    res.status(201).send('sign success');
+  });
+});
 
 app.get('/stock', (req, res) => {
   axios.request(options).then((response) => {

@@ -8,11 +8,11 @@ module.exports = {
   // "production" will be minified
   mode: 'development',
   // [entry] this is the file where the bundling starts from.
-  entry: './src/index.jsx',
+  entry: './client/src/index.jsx',
   // [output] is a configuration object to determine how and where to bundle our code
   output: {
     // [path] is where to output
-    path: path.join(__dirname, 'public'),
+    path: path.join(__dirname, 'client/public'),
     // [filename] is the name of the file
     filename: 'bundle.js',
   },
@@ -62,7 +62,7 @@ module.exports = {
   devServer: {
     // [static] config for how what to serve
     static: {
-      directory: path.join(__dirname, 'public'),
+      directory: path.join(__dirname, 'client/public'),
     },
     compress: true,
     // [port] what port on our local machine to run the dev server
