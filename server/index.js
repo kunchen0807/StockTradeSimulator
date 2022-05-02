@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const axios = require('axios');
 const signupAccount = require('../database/controllers/account');
 const loginAccount = require('../database/controllers/login');
+const API_KEY = require('../config');
 
 const app = express();
 app.use(morgan('dev'));
@@ -22,7 +23,7 @@ const options = {
   },
   headers: {
     'X-RapidAPI-Host': 'alpha-vantage.p.rapidapi.com',
-    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+    'X-RapidAPI-Key': API_KEY,
   },
 };
 
