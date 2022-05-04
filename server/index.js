@@ -4,28 +4,58 @@ const morgan = require('morgan');
 const axios = require('axios');
 const signupAccount = require('../database/controllers/account');
 const loginAccount = require('../database/controllers/login');
-const API_KEY = require('../config');
+const initializeAccount = require('../database/controllers/initializeAccount');
+const buyStocks = require('../database/controllers/buyStocks');
+const sellStocks = require('../database/controllers/sellStocks');
+const userData = require('../database/controllers/userData');
+const config = require('../config');
 
 const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client/public')));
 
-const options = {
+const options = (stockSymbol, timeInterval, output) => ({
   method: 'GET',
-  url: 'https://alpha-vantage.p.rapidapi.com/query',
+  url: 'https://twelve-data1.p.rapidapi.com/time_series',
   params: {
-    interval: '5min',
-    function: 'TIME_SERIES_INTRADAY',
-    symbol: 'MSFT',
-    datatype: 'json',
-    output_size: 'compact',
+    symbol: stockSymbol, interval: timeInterval, outputsize: output, format: 'json',
   },
   headers: {
-    'X-RapidAPI-Host': 'alpha-vantage.p.rapidapi.com',
-    'X-RapidAPI-Key': API_KEY,
+    'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com',
+    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+  },
+});
+
+const trendingStocks = {
+  method: 'GET',
+  url: 'https://stock-data-yahoo-finance-alternative.p.rapidapi.com/v1/finance/trending/US',
+  headers: {
+    'X-RapidAPI-Host': 'stock-data-yahoo-finance-alternative.p.rapidapi.com',
+    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
   },
 };
+
+const stockNews = {
+  method: 'GET',
+  url: 'https://mboum-finance.p.rapidapi.com/ne/news',
+  headers: {
+    'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com',
+    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+  },
+};
+
+const stats = (stockSymbol, timeInterval, output) => ({
+  method: 'GET',
+  url: 'https://twelve-data1.p.rapidapi.com/quote',
+  params: {
+    symbol: stockSymbol, interval: timeInterval, outputsize: output, format: 'json',
+  },
+  headers: {
+    'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com',
+    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+  },
+});
 
 app.post('/login', (req, res) => {
   loginAccount(req.body, (response) => {
@@ -35,16 +65,54 @@ app.post('/login', (req, res) => {
 
 app.post('/signup', (req, res) => {
   signupAccount(req.body, () => {
-    res.status(201).send('sign success');
+    initializeAccount(req.body, () => {
+      res.status(201).send('sign success');
+    });
   });
 });
 
 app.get('/stock', (req, res) => {
-  axios.request(options).then((response) => {
+  axios.request(options('AMZN', '15min', '30')).then((response) => {
     console.log(response.data);
   }).catch((error) => {
     console.error(error);
   });
+});
+
+app.get('/stats', (req, res) => {
+  axios.request(stats('AMZN', '15min', '30')).then((response) => {
+    console.log(response.data);
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
+app.get('/trend', (req, res) => {
+  axios.request(trendingStocks).then((response) => {
+    console.log(response.data.finance.result[0].quotes);
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
+app.get('/news', (req, res) => {
+  axios.request(stockNews).then((response) => {
+    console.log(response.data.slice(0, 5));
+  }).catch((error) => {
+    console.error(error);
+  });
+});
+
+app.post('/user', (req, res) => {
+  userData(req.body, (results) => res.status(200).send(results));
+});
+
+app.post('/buy', (req, res) => {
+  buyStocks(req.body, () => res.status(200).send('buying completed'));
+});
+
+app.post('/sell', (req, res) => {
+  sellStocks(req.body, () => res.status(200).send('selling completed'), () => res.status(500).send('selling failed'));
 });
 
 const PORT = process.env.PORT || 3000;

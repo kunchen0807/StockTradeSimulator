@@ -2,11 +2,13 @@ const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/stockTrader');
 
-const accountSchema = mongoose.Schema({
+const stockDataSchema = mongoose.Schema({
   username: String,
-  password: String,
+  buyingPower: Number,
+  investment: Number,
+  stock: Array,
 });
 
-const StockAccount = mongoose.model('account', accountSchema);
+const Stocks = mongoose.model('stocks', stockDataSchema);
 
-module.exports = StockAccount;
+module.exports = Stocks;

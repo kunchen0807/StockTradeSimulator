@@ -1,4 +1,4 @@
-const StockAccount = require('../models/stockdb');
+const StockAccount = require('../models/accountdb');
 
 const signupAccount = (data, cb) => {
   const signupQuery = { username: data.signup_username, password: data.signup_password };
