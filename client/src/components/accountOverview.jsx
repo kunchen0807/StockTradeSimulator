@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 function AccountOverview({
   currentUser, stockQuantityEnter, buyStock, sellStock,
-  buyingPower, investValue, stockOwned, currentPrice,
+  buyingPower, investValue, stockOwned,
 }) {
   const dollarUSLocale = Intl.NumberFormat('en-US');
   let totalStockValue = 0;

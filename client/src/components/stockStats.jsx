@@ -2,14 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function Stockstats({ stockStats }) {
+  const dollarUSLocale = Intl.NumberFormat('en-US');
   return (
-    <div>
+    <div className="stock-stats-block">
       <h2>Stats</h2>
       <h3>{stockStats.name}</h3>
       <p>
         Open:
-        {' '}
-        {stockStats.open}
+        {' $'}
+        {dollarUSLocale.format(stockStats.open)}
+      </p>
+      <p>
+        Close:
+        {' $'}
+        {dollarUSLocale.format(stockStats.close)}
       </p>
       <p>
         Volume:
@@ -17,31 +23,36 @@ function Stockstats({ stockStats }) {
         {stockStats.volume}
       </p>
       <p>
-        High:
+        Percent Change:
         {' '}
-        {stockStats.high}
+        {parseFloat(stockStats.percent_change).toFixed(2)}
+        %
+      </p>
+      <p>
+        High:
+        {' $'}
+        {dollarUSLocale.format(stockStats.high)}
       </p>
       <p>
         Low:
-        {' '}
-        {stockStats.low}
+        {' $'}
+        {dollarUSLocale.format(stockStats.low)}
       </p>
       <p>
         52 Wk high:
-        {' '}
-        {stockStats.fifty_two_week.high}
+        {' $'}
+        {dollarUSLocale.format(stockStats.fifty_two_week.high)}
       </p>
       <p>
         52 Wk low:
-        {' '}
-        {stockStats.fifty_two_week.low}
+        {' $'}
+        {dollarUSLocale.format(stockStats.fifty_two_week.low)}
       </p>
     </div>
   );
 }
 
 Stockstats.propTypes = {
-
 };
 
 Stockstats.defaultProps = {

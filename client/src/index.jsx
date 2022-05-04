@@ -9,8 +9,9 @@ import StockNews from './components/stockNews';
 import Search from './components/search';
 import AccountOverview from './components/accountOverview';
 import Stockstats from './components/stockStats';
+import InGamePurchase from './components/inGamePurchase';
 import {
-  stockData, trendingStocks, stockNews, stockStats,
+  stockdata, trendingstocks, stockstats, stocknews,
 } from './exampleData';
 
 const root = createRoot(document.getElementById('root'));
@@ -26,9 +27,9 @@ class App extends React.Component {
       currentUser: '',
       signupUsername: '',
       signupPassword: '',
-      // stockData: stockData,
-      // stockNews: stockNews,
-      // trendingStocks: trendingStocks,
+      stockData: stockdata,
+      stockNews: stocknews,
+      trendingStocks: trendingstocks,
       searchValue: 'AMZN',
       currentStock: 'AMZN',
       currentPrice: 5,
@@ -36,8 +37,16 @@ class App extends React.Component {
       buyingPower: 0,
       investValue: 0,
       stockOwned: [],
+      seen: false,
+      stockStats: stockstats,
     };
   }
+
+  // componentDidMount() {
+  //   this.fetchNews();
+  //   this.fetchTrendingStocks();
+  //   this.submitSearch();
+  // }
 
   // fetch user data once authentication is done
 
@@ -116,6 +125,21 @@ class App extends React.Component {
     });
   }
 
+  signOut() {
+    this.setState({
+      authenticated: false,
+      username: '',
+      password: '',
+    });
+  }
+
+  togglePop() {
+    const { seen } = this.state;
+    this.setState({
+      seen: !seen,
+    });
+  }
+
   searchStock(input) {
     this.setState({
       searchValue: input,
@@ -124,25 +148,77 @@ class App extends React.Component {
 
   submitSearch() {
     const { searchValue } = this.state;
-    this.setState({
-      currentStock: searchValue,
-    });
-    console.log({ stock: searchValue, interval: '15min', output: '30' });
+    this.setState(
+      { currentStock: searchValue.toUpperCase() },
+      () => {
+        this.fetchStats();
+      },
+    );
+    axios.post('/stock', { stock: searchValue, interval: '15min', output: '30' })
+      .then((results) => {
+        this.setState({
+          stockData: results.data,
+          currentPrice: results.data.values[0].close,
+        });
+      });
   }
 
   todayView() {
     const { currentStock } = this.state;
-    console.log({ stock: currentStock, interval: '15min', output: '30' });
+    axios.post('/stock', { stock: currentStock, interval: '15min', output: '30' })
+      .then((results) => {
+        this.setState({
+          stockData: results.data,
+        });
+      });
   }
 
   monthlyView() {
     const { currentStock } = this.state;
-    console.log({ stock: currentStock, interval: '1day', output: '30' });
+    axios.post('/stock', { stock: currentStock, interval: '1day', output: '30' })
+      .then((results) => {
+        this.setState({
+          stockData: results.data,
+        });
+      });
   }
 
   yearlyView() {
     const { currentStock } = this.state;
-    console.log({ stock: currentStock, interval: '1week', output: '52' });
+    axios.post('/stock', { stock: currentStock, interval: '1week', output: '52' })
+      .then((results) => {
+        this.setState({
+          stockData: results.data,
+        });
+      });
+  }
+
+  fetchStats() {
+    const { currentStock } = this.state;
+    axios.post('/stats', { stock: currentStock, interval: '15min', output: '30' })
+      .then((results) => {
+        this.setState({
+          stockStats: results.data,
+        });
+      });
+  }
+
+  fetchNews() {
+    axios.get('/news')
+      .then((results) => {
+        this.setState({
+          stockNews: results.data,
+        });
+      });
+  }
+
+  fetchTrendingStocks() {
+    axios.get('/trend')
+      .then((results) => {
+        this.setState({
+          trendingStocks: results.data,
+        });
+      });
   }
 
   fetchUserData() {
@@ -172,9 +248,10 @@ class App extends React.Component {
     const { quantity } = this.state;
     const { currentUser } = this.state;
     const { currentPrice } = this.state;
+    const calculatedBuyingPower = buyingPower - (quantity * currentPrice);
     const stockInfo = {
       username: currentUser,
-      cash: buyingPower,
+      cash: calculatedBuyingPower,
       stock: {
         symbol: currentStock,
         stockQuantity: quantity,
@@ -185,9 +262,6 @@ class App extends React.Component {
     axios.post('/buy', stockInfo)
       .then(() => {
         this.fetchUserData();
-        this.setState({
-          quantity: 0,
-        });
       })
       .catch((error) => {
         console.error(error);
@@ -200,18 +274,20 @@ class App extends React.Component {
     const { quantity } = this.state;
     const { currentUser } = this.state;
     const { currentPrice } = this.state;
+    const calculatedBuyingPower = buyingPower + (quantity * currentPrice);
     const stockInfo = {
       username: currentUser,
-      cash: buyingPower,
+      cash: calculatedBuyingPower,
       stock: {
         symbol: currentStock,
         stockQuantity: quantity,
         mostRecentPrice: currentPrice,
-        avgPurchasePrice: currentPrice,
       },
     };
     axios.post('/sell', stockInfo)
-      .then((results) => console.log(results))
+      .then(() => {
+        this.fetchUserData();
+      })
       .catch((error) => {
         console.error('fail to sell', error);
         this.fetchUserData();
@@ -229,14 +305,18 @@ class App extends React.Component {
     const { buyingPower } = this.state;
     const { investValue } = this.state;
     const { stockOwned } = this.state;
-    // const { stockData } = this.state;
-    // const { stockNews } = this.state;
-    // const { trendingStocks } = this.state;
+    const { seen } = this.state;
+    const { quantity } = this.state;
+    const { stockData } = this.state;
+    const { currentPrice } = this.state;
+    const { stockNews } = this.state;
+    const { trendingStocks } = this.state;
+    const { stockStats } = this.state;
 
     if (signup) {
       return (
         <div className="App">
-          <h1>RobinWoo!</h1>
+          <h1 className="app-title">Robeanhood</h1>
           <SignUp
             usernameSignup={(input) => this.usernameSignup(input)}
             passwordSignup={(input) => this.passwordSignup(input)}
@@ -246,44 +326,73 @@ class App extends React.Component {
       );
     }
     if (!authenticated && !signup) {
+      const { username } = this.state;
+      const { password } = this.state;
       return (
         <div className="App">
-          <h1>RobinWoo!</h1>
+          <h1 className="app-title">Robeanhood</h1>
           <Login
             usernameInput={(input) => this.usernameInput(input)}
             passwordInput={(input) => this.passwordInput(input)}
             loginSubmit={() => this.loginSubmit()}
             signupPage={() => this.signupPage()}
+            username={username}
+            password={password}
           />
         </div>
       );
     }
     return (
       <div className="App">
-        <h1>RobinWoo!</h1>
-        <StockNews stockNews={stockNews} trendingStocks={trendingStocks} />
-        <Search
-          searchStock={(input) => this.searchStock(input)}
-          submitSearch={() => this.submitSearch()}
-        />
-        <StockOverivew
-          stockData={stockData}
-          todayView={() => this.todayView()}
-          monthlyView={() => this.monthlyView()}
-          yearlyView={() => this.yearlyView()}
-        />
-        <AccountOverview
-          currentUser={currentUser}
-          stockQuantityEnter={(input) => this.stockQuantityEnter(input)}
-          buyStock={() => this.buyStock()}
-          sellStock={() => this.sellStock()}
-          buyingPower={buyingPower}
-          investValue={investValue}
-          stockOwned={stockOwned}
-        />
-        <Stockstats
-          stockStats={stockStats}
-        />
+        <h1 className="app-title">Robeanhood</h1>
+        <button className="sign-out-button" type="submit" onClick={() => this.signOut()}>Sign Out</button>
+        <div>
+          <button className="in-game-purchase-button" type="button" onClick={() => this.togglePop()}>Purchase</button>
+        </div>
+        <div>
+          {seen ? (
+            <InGamePurchase
+              toggle={() => this.togglePop()}
+              user={currentUser}
+              buyingPower={buyingPower}
+              investValue={investValue}
+              fetchUserData={() => this.fetchUserData()}
+            />
+          ) : null}
+        </div>
+        <div className="stock-news-section">
+          <StockNews stockNews={stockNews} trendingStocks={trendingStocks} />
+        </div>
+        <div className="search-stock-overview-section">
+          <Search
+            searchStock={(input) => this.searchStock(input)}
+            submitSearch={() => this.submitSearch()}
+          />
+          <StockOverivew
+            stockData={stockData}
+            todayView={() => this.todayView()}
+            monthlyView={() => this.monthlyView()}
+            yearlyView={() => this.yearlyView()}
+            currentPrice={currentPrice}
+          />
+        </div>
+        <div className="account-overview-section">
+          <AccountOverview
+            currentUser={currentUser}
+            stockQuantityEnter={(input) => this.stockQuantityEnter(input)}
+            buyStock={() => this.buyStock()}
+            sellStock={() => this.sellStock()}
+            buyingPower={buyingPower}
+            investValue={investValue}
+            stockOwned={stockOwned}
+            quantity={quantity}
+          />
+        </div>
+        <div className="stock-stats-section">
+          <Stockstats
+            stockStats={stockStats}
+          />
+        </div>
       </div>
     );
   }

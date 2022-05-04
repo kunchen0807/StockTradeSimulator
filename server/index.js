@@ -8,6 +8,7 @@ const initializeAccount = require('../database/controllers/initializeAccount');
 const buyStocks = require('../database/controllers/buyStocks');
 const sellStocks = require('../database/controllers/sellStocks');
 const userData = require('../database/controllers/userData');
+const investmentPurchase = require('../database/controllers/investmentPurchase');
 const config = require('../config');
 
 const app = express();
@@ -23,7 +24,7 @@ const options = (stockSymbol, timeInterval, output) => ({
   },
   headers: {
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com',
-    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+    'X-RapidAPI-Key': config.API_KEY,
   },
 });
 
@@ -32,7 +33,7 @@ const trendingStocks = {
   url: 'https://stock-data-yahoo-finance-alternative.p.rapidapi.com/v1/finance/trending/US',
   headers: {
     'X-RapidAPI-Host': 'stock-data-yahoo-finance-alternative.p.rapidapi.com',
-    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+    'X-RapidAPI-Key': config.API_KEY,
   },
 };
 
@@ -41,7 +42,7 @@ const stockNews = {
   url: 'https://mboum-finance.p.rapidapi.com/ne/news',
   headers: {
     'X-RapidAPI-Host': 'mboum-finance.p.rapidapi.com',
-    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+    'X-RapidAPI-Key': config.API_KEY,
   },
 };
 
@@ -53,7 +54,7 @@ const stats = (stockSymbol, timeInterval, output) => ({
   },
   headers: {
     'X-RapidAPI-Host': 'twelve-data1.p.rapidapi.com',
-    'X-RapidAPI-Key': '4b5804719fmsh5141634c5952b39p1cb17cjsnf9ee9ac7d74f',
+    'X-RapidAPI-Key': config.API_KEY,
   },
 });
 
@@ -71,17 +72,17 @@ app.post('/signup', (req, res) => {
   });
 });
 
-app.get('/stock', (req, res) => {
-  axios.request(options('AMZN', '15min', '30')).then((response) => {
-    console.log(response.data);
+app.post('/stock', (req, res) => {
+  axios.request(options(req.body.stock, req.body.interval, req.body.output)).then((response) => {
+    res.json(response.data);
   }).catch((error) => {
     console.error(error);
   });
 });
 
-app.get('/stats', (req, res) => {
-  axios.request(stats('AMZN', '15min', '30')).then((response) => {
-    console.log(response.data);
+app.post('/stats', (req, res) => {
+  axios.request(stats(req.body.stock, req.body.interval, req.body.output)).then((response) => {
+    res.json(response.data);
   }).catch((error) => {
     console.error(error);
   });
@@ -89,7 +90,7 @@ app.get('/stats', (req, res) => {
 
 app.get('/trend', (req, res) => {
   axios.request(trendingStocks).then((response) => {
-    console.log(response.data.finance.result[0].quotes);
+    res.json(response.data.finance.result[0].quotes);
   }).catch((error) => {
     console.error(error);
   });
@@ -97,7 +98,7 @@ app.get('/trend', (req, res) => {
 
 app.get('/news', (req, res) => {
   axios.request(stockNews).then((response) => {
-    console.log(response.data.slice(0, 5));
+    res.json(response.data.slice(0, 5));
   }).catch((error) => {
     console.error(error);
   });
@@ -113,6 +114,10 @@ app.post('/buy', (req, res) => {
 
 app.post('/sell', (req, res) => {
   sellStocks(req.body, () => res.status(200).send('selling completed'), () => res.status(500).send('selling failed'));
+});
+
+app.post('/purchase', (req, res) => {
+  investmentPurchase(req.body, () => res.status(200).send('purchase completed'));
 });
 
 const PORT = process.env.PORT || 3000;

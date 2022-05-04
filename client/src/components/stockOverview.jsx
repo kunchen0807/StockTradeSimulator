@@ -5,9 +5,9 @@ import {
 } from 'recharts';
 
 function StockOverivew({
-  stockData, todayView, monthlyView, yearlyView,
+  stockData, todayView, monthlyView, yearlyView, currentPrice,
 }) {
-  // structure example [{name: 'a', value: 12}]
+  const dollarUSLocale = Intl.NumberFormat('en-US');
   const datas = [];
   stockData.values.forEach((data) => {
     datas.push({ time: data.datetime, price: data.close });
@@ -24,6 +24,11 @@ function StockOverivew({
   return (
     <div className="stock_overview">
       <h2>{stockData.meta.symbol}</h2>
+      <h3>
+        Current Price:
+        {' $'}
+        {dollarUSLocale.format(currentPrice)}
+      </h3>
       <button type="submit" onClick={() => todayView()}>1D</button>
       <button type="submit" onClick={() => monthlyView()}>1M</button>
       <button type="submit" onClick={() => yearlyView()}>1Y</button>

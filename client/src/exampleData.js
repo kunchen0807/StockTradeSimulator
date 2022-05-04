@@ -1,4 +1,4 @@
-const stockData = {
+const stockdata = {
   meta: {
     symbol: 'AMZN',
     interval: '15min',
@@ -252,7 +252,7 @@ const stockData = {
   status: 'ok',
 };
 
-const trendingStocks = [
+const trendingstocks = [
   { symbol: 'CHGG' }, { symbol: 'ABNB' },
   { symbol: 'EXPE' }, { symbol: 'BP' },
   { symbol: 'PFE' }, { symbol: 'WDC' },
@@ -265,7 +265,7 @@ const trendingStocks = [
   { symbol: 'CC' }, { symbol: 'OHI' },
 ];
 
-const stockNews = [
+const stocknews = [
   {
     title: 'With interest rates rising, it’s time to focus on MANG stocks instead of FAANG, according to Jefferies',
     link: 'https://www.marketwatch.com/story/with-interest-rates-rising-its-time-to-focus-on-mang-stocks-instead-of-faang-according-to-jefferies-11651590925?siteid=yhoof2&yptr=yahoo',
@@ -303,7 +303,7 @@ const stockNews = [
   },
 ];
 
-const stockStats = {
+const stockstats = {
   symbol: 'AMZN',
   name: 'Amazon.com Inc',
   exchange: 'NASDAQ',
@@ -329,7 +329,7 @@ const stockStats = {
   },
 };
 
-export { stockData };
-export { trendingStocks };
-export { stockNews };
-export { stockStats };
+export { stockdata };
+export { trendingstocks };
+export { stocknews };
+export { stockstats };

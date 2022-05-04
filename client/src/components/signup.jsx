@@ -5,10 +5,16 @@ function SignUp({ usernameSignup, passwordSignup, signupSubmit }) {
   return (
     <div className="signup">
       <span>
-        <h2>Account Sign Up</h2>
-        <input type="text" placeholder="USERNAME" onChange={(input) => usernameSignup(input.target.value)} />
-        <input type="password" placeholder="PASSWORD" onChange={(input) => passwordSignup(input.target.value)} />
-        <button type="submit" onClick={() => signupSubmit()}>Submit</button>
+        <h2 className="signin-title">Account Sign Up</h2>
+        <div className="sign-in-username">
+          <input type="text" placeholder="USERNAME" onChange={(input) => usernameSignup(input.target.value)} />
+        </div>
+        <div className="sign-in-password">
+          <input type="password" placeholder="PASSWORD" onChange={(input) => passwordSignup(input.target.value)} />
+        </div>
+        <div className="sign-up-button">
+          <button type="submit" onClick={() => signupSubmit()}>Submit</button>
+        </div>
       </span>
     </div>
   );

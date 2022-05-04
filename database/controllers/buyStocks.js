@@ -1,7 +1,6 @@
 const Stocks = require('../models/stockdb');
 
 const buyStocks = (data, cb) => {
-  console.log('buy', data);
   Stocks.find({ username: data.username }, (err, doc) => {
     if (err) {
       console.log(err);

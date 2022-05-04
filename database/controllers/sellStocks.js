@@ -1,7 +1,6 @@
 const Stocks = require('../models/stockdb');
 
 const sellStocks = (data, cb, failCb) => {
-  console.log('sell', data);
   Stocks.find({ username: data.username }, (err, doc) => {
     if (err) {
       console.log(err);
@@ -12,6 +11,7 @@ const sellStocks = (data, cb, failCb) => {
       if (updateStock[i].symbol === data.stock.symbol) {
         if (updateStock[i].stockQuantity >= data.stock.stockQuantity) {
           updateStock[i].stockQuantity -= data.stock.stockQuantity;
+          updateStock[i].mostRecentPrice = data.stock.mostRecentPrice;
         } else {
           failCb();
           return;
