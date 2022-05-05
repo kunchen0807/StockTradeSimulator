@@ -34,7 +34,7 @@ function AccountOverview({
       </p>
       <p>
         Total Asset:
-        {' '}
+        {' $'}
         {dollarUSLocale.format(parseFloat(totalAsset).toFixed(2))}
       </p>
       <p>
