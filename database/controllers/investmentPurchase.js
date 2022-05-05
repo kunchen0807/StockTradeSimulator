@@ -1,7 +1,6 @@
 const Stocks = require('../models/stockdb');
 
 const investmentPurchase = (data, cb) => {
-  console.log('purchase', data);
   Stocks.findOneAndUpdate(
     { username: data.username },
     { buyingPower: data.buyingPower, investment: data.investment },

@@ -53,10 +53,29 @@ function Stockstats({ stockStats }) {
 }
 
 Stockstats.propTypes = {
+  stockStats: PropTypes.shape({
+    name: PropTypes.string,
+    open: PropTypes.string,
+    close: PropTypes.string,
+    volume: PropTypes.string,
+    high: PropTypes.string,
+    low: PropTypes.string,
+    percent_change: PropTypes.string,
+    fifty_two_week: PropTypes.shape({ high: PropTypes.string, low: PropTypes.string }),
+  }),
 };
 
 Stockstats.defaultProps = {
-
+  stockStats: PropTypes.shape({
+    name: '',
+    open: '',
+    close: '',
+    volume: '',
+    high: '',
+    low: '',
+    percent_change: '',
+    fifty_two_week: PropTypes.shape({ high: '', low: '' }),
+  }),
 };
 
 export default Stockstats;

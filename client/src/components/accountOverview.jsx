@@ -14,10 +14,10 @@ function AccountOverview({
   const profit = ((totalAsset - investValue) / investValue) * 100;
   return (
     <div className="account overview">
-      <p>
+      <h3>
         User: @
         {currentUser}
-      </p>
+      </h3>
       <p>Number of Shares</p>
       <input type="number" min="1" placeholder="Please Enter a Number" onChange={(input) => stockQuantityEnter(input.target.value)} />
       <button type="submit" onClick={() => buyStock()}>Buy</button>
@@ -43,21 +43,21 @@ function AccountOverview({
         {profit}
         %
       </p>
+      <h3>My Stocks</h3>
       <div className="stock_owned">
-        <p>Stocks</p>
         {stockOwned.map((stock) => (
           <p key={stock.symbol}>
-            Stock Symbol:
+            Stock:
             {' '}
             {stock.symbol}
-            {' '}
+            {' -- '}
             Shares:
             {' '}
             {stock.stockQuantity}
-            {' '}
+            {' -- '}
             Average Cost:
             {' $'}
-            {stock.avgPurchasePrice}
+            {dollarUSLocale.format(stock.avgPurchasePrice)}
           </p>
         ))}
       </div>
@@ -66,9 +66,23 @@ function AccountOverview({
 }
 
 AccountOverview.propTypes = {
+  currentUser: PropTypes.string,
+  stockQuantityEnter: PropTypes.func,
+  buyStock: PropTypes.func,
+  sellStock: PropTypes.func,
+  buyingPower: PropTypes.number,
+  investValue: PropTypes.number,
+  stockOwned: PropTypes.shape([]),
 };
 
 AccountOverview.defaultProps = {
+  currentUser: '',
+  stockQuantityEnter: () => {},
+  buyStock: () => {},
+  sellStock: () => {},
+  buyingPower: 0,
+  investValue: 0,
+  stockOwned: [],
 };
 
 export default AccountOverview;

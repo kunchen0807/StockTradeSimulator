@@ -29,9 +29,11 @@ function StockOverivew({
         {' $'}
         {dollarUSLocale.format(currentPrice)}
       </h3>
-      <button type="submit" onClick={() => todayView()}>1D</button>
-      <button type="submit" onClick={() => monthlyView()}>1M</button>
-      <button type="submit" onClick={() => yearlyView()}>1Y</button>
+      <div className="intervel-change-button">
+        <button type="submit" onClick={() => todayView()}>1D</button>
+        <button type="submit" onClick={() => monthlyView()}>1M</button>
+        <button type="submit" onClick={() => yearlyView()}>1Y</button>
+      </div>
       <h3>{interval}</h3>
       <div className="chart">
         <LineChart
@@ -54,11 +56,53 @@ function StockOverivew({
 }
 
 StockOverivew.propTypes = {
-
+  todayView: PropTypes.func,
+  monthlyView: PropTypes.func,
+  yearlyView: PropTypes.func,
+  currentPrice: PropTypes.number,
+  stockData: PropTypes.shape({
+    meta: PropTypes.shape({
+      symbol: PropTypes.string,
+      interval: PropTypes.string,
+      currency: PropTypes.string,
+      exchange_timezone: PropTypes.string,
+      exchange: PropTypes.string,
+      type: PropTypes.string,
+    }),
+    values: PropTypes.shape([{
+      datetime: PropTypes.string,
+      open: PropTypes.string,
+      high: PropTypes.string,
+      low: PropTypes.string,
+      close: PropTypes.string,
+      volume: PropTypes.string,
+    }]),
+  }),
 };
 
 StockOverivew.defaultProps = {
-
+  todayView: () => {},
+  monthlyView: () => {},
+  yearlyView: () => {},
+  currentPrice: 0,
+  stockData: {
+    meta: {
+      symbol: '',
+      interval: '',
+      currency: '',
+      exchange_timezone: '',
+      exchange: '',
+      type: '',
+    },
+    values: [{
+      datetime: '',
+      open: '',
+      high: '',
+      low: '',
+      close: '',
+      volume: '',
+    }],
+  },
 };
 
 export default StockOverivew;

@@ -34,11 +34,13 @@ function StockNews({ stockNews, trendingStocks }) {
 }
 
 StockNews.propTypes = {
-
+  stockNews: PropTypes.arrayOf(PropTypes.shape({})),
+  trendingStocks: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 StockNews.defaultProps = {
-
+  stockNews: [{}],
+  trendingStocks: [{}],
 };
 
 export default StockNews;

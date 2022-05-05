@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-function Search({ searchStock, submitSearch, }) {
+function Search({ searchStock, submitSearch }) {
   return (
     <div className="search">
       <span>
@@ -14,9 +14,13 @@ function Search({ searchStock, submitSearch, }) {
 }
 
 Search.propTypes = {
+  searchStock: PropTypes.func,
+  submitSearch: PropTypes.func,
 };
 
 Search.defaultProps = {
+  searchStock: () => {},
+  submitSearch: () => {},
 };
 
 export default Search;

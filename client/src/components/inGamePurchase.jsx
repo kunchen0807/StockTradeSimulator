@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import swal from 'sweetalert';
 import './stockTrader.scss';
 
 export default class InGamePurchase extends Component {
@@ -32,6 +33,7 @@ export default class InGamePurchase extends Component {
     axios.post('/purchase', purchase)
       .then(() => {
         fetchData();
+        swal('Thank you!', 'Your purchase is successful!', 'success');
       });
   }
 
@@ -48,6 +50,7 @@ export default class InGamePurchase extends Component {
     axios.post('/purchase', purchase)
       .then(() => {
         fetchData();
+        swal('Thank you!', 'Your purchase is successful!', 'success');
       });
   }
 
@@ -64,6 +67,7 @@ export default class InGamePurchase extends Component {
     axios.post('/purchase', purchase)
       .then(() => {
         fetchData();
+        swal('Thank you!', 'Your purchase is successful!', 'success');
       });
   }
 
@@ -82,9 +86,17 @@ export default class InGamePurchase extends Component {
 }
 
 InGamePurchase.propTypes = {
-
+  toggle: PropTypes.func,
+  fetchUserData: PropTypes.func,
+  buyingPower: PropTypes.number,
+  investValue: PropTypes.number,
+  user: PropTypes.string,
 };
 
 InGamePurchase.defaultProps = {
-
+  toggle: () => {},
+  fetchUserData: () => {},
+  buyingPower: 0,
+  investValue: 0,
+  user: '',
 };

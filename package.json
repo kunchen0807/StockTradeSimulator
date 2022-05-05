@@ -18,7 +18,8 @@
     "prop-types": "^15.8.1",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "recharts": "^2.1.9"
+    "recharts": "^2.1.9",
+    "sweetalert": "^2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.10",

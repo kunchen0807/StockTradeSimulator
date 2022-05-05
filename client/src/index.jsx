@@ -2,6 +2,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
+import swal from 'sweetalert';
 import Login from './components/login';
 import SignUp from './components/signup';
 import StockOverivew from './components/stockOverview';
@@ -42,11 +43,11 @@ class App extends React.Component {
     };
   }
 
-  // componentDidMount() {
-  //   this.fetchNews();
-  //   this.fetchTrendingStocks();
-  //   this.submitSearch();
-  // }
+  componentDidMount() {
+    this.fetchNews();
+    this.fetchTrendingStocks();
+    this.submitSearch();
+  }
 
   // fetch user data once authentication is done
 
@@ -77,7 +78,7 @@ class App extends React.Component {
     axios.post('/login', { login_username: username, login_password: password })
       .then((response) => {
         if (!response.data.authentication) {
-          alert('Invid username or password');
+          swal("'Invid username or password!", 'Please retry!', 'error');
           this.setState({
             username: '',
             password: '',
@@ -116,6 +117,7 @@ class App extends React.Component {
           signupUsername: '',
           signupPassword: '',
         });
+        swal('Login now', 'Your account is created!', 'success');
       });
   }
 
@@ -262,6 +264,7 @@ class App extends React.Component {
     axios.post('/buy', stockInfo)
       .then(() => {
         this.fetchUserData();
+        swal('Thank you!', 'You order has been processed!', 'success');
       })
       .catch((error) => {
         console.error(error);
@@ -287,14 +290,12 @@ class App extends React.Component {
     axios.post('/sell', stockInfo)
       .then(() => {
         this.fetchUserData();
+        swal('Thank you!', 'You order has been processed!', 'success');
       })
       .catch((error) => {
-        console.error('fail to sell', error);
+        console.error(error);
         this.fetchUserData();
-        this.setState({
-          quantity: 0,
-        });
-        alert('Please check you have enough stocks to sell');
+        swal('Transaction unsuccessful!', 'Please check if you have enough stocks to sell', 'error');
       });
   }
 

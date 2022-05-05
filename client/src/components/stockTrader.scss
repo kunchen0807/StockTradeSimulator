@@ -105,7 +105,7 @@ input {
 .account-overview-section {
   grid-column: 2;
   grid-row: 3;
-  margin-top: 350px;
+  margin-top: 200px;
   font-size: 20px;
 }
 .stock-stats-section {
@@ -142,4 +142,12 @@ input {
   position: absolute;
   left: 950px;
   top: 450px;
+}
+.stock_owned {
+  overflow: scroll;
+  height: 270px;
+  width: 600px;
+}
+.intervel-change-button {
+  margin-left: 300px;
 }
