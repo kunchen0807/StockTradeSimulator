@@ -25,22 +25,22 @@ function AccountOverview({
       <p>
         Buying Power:
         {' $'}
-        {dollarUSLocale.format(buyingPower)}
+        {dollarUSLocale.format(parseFloat(buyingPower).toFixed(2))}
       </p>
       <p>
         Investment value:
         {' $'}
-        {dollarUSLocale.format(investValue)}
+        {dollarUSLocale.format(parseFloat(investValue).toFixed(2))}
       </p>
       <p>
         Total Asset:
         {' '}
-        {dollarUSLocale.format(totalAsset)}
+        {dollarUSLocale.format(parseFloat(totalAsset).toFixed(2))}
       </p>
       <p>
         Total Profit:
         {' '}
-        {profit}
+        {parseFloat(profit).toFixed(2)}
         %
       </p>
       <h3>My Stocks</h3>

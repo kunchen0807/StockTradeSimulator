@@ -3,6 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import axios from 'axios';
 import swal from 'sweetalert';
+import { hashString } from 'react-hash-string';
 import Login from './components/login';
 import SignUp from './components/signup';
 import StockOverivew from './components/stockOverview';
@@ -75,10 +76,10 @@ class App extends React.Component {
   loginSubmit() {
     const { username } = this.state;
     const { password } = this.state;
-    axios.post('/login', { login_username: username, login_password: password })
+    axios.post('/login', { login_username: username, login_password: hashString(password) })
       .then((response) => {
         if (!response.data.authentication) {
-          swal("'Invid username or password!", 'Please retry!', 'error');
+          swal('Invid username or password!', 'Please retry!', 'error');
           this.setState({
             username: '',
             password: '',
@@ -110,7 +111,7 @@ class App extends React.Component {
   signupSubmit() {
     const { signupUsername } = this.state;
     const { signupPassword } = this.state;
-    axios.post('/signup', { signup_username: signupUsername, signup_password: signupPassword })
+    axios.post('/signup', { signup_username: signupUsername, signup_password: hashString(signupPassword) })
       .then(() => {
         this.setState({
           signup: false,

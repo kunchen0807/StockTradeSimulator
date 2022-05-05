@@ -10,17 +10,18 @@ function Stockstats({ stockStats }) {
       <p>
         Open:
         {' $'}
-        {dollarUSLocale.format(stockStats.open)}
+        {dollarUSLocale.format(parseFloat(stockStats.open).toFixed(2))}
       </p>
       <p>
         Close:
         {' $'}
-        {dollarUSLocale.format(stockStats.close)}
+        {dollarUSLocale.format(parseFloat(stockStats.close).toFixed(2))}
       </p>
       <p>
         Volume:
         {' '}
-        {stockStats.volume}
+        {parseInt((stockStats.volume / 1000000), 10).toFixed(2)}
+        M
       </p>
       <p>
         Percent Change:
@@ -31,22 +32,22 @@ function Stockstats({ stockStats }) {
       <p>
         High:
         {' $'}
-        {dollarUSLocale.format(stockStats.high)}
+        {dollarUSLocale.format(parseFloat(stockStats.high).toFixed(2))}
       </p>
       <p>
         Low:
         {' $'}
-        {dollarUSLocale.format(stockStats.low)}
+        {dollarUSLocale.format(parseFloat(stockStats.low).toFixed(2))}
       </p>
       <p>
         52 Wk high:
         {' $'}
-        {dollarUSLocale.format(stockStats.fifty_two_week.high)}
+        {dollarUSLocale.format(parseFloat(stockStats.fifty_two_week.high).toFixed(2))}
       </p>
       <p>
         52 Wk low:
         {' $'}
-        {dollarUSLocale.format(stockStats.fifty_two_week.low)}
+        {dollarUSLocale.format(parseFloat(stockStats.fifty_two_week.low).toFixed(2))}
       </p>
     </div>
   );
